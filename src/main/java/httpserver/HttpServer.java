@@ -3,8 +3,7 @@ package httpserver;
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.List;
 
 public class HttpServer {
@@ -17,8 +16,9 @@ public class HttpServer {
         return _instance;
     }
 
-    public static void start(String[] args) throws IOException, URISyntaxException {
+    public static void start(String[] args) throws  Exception {
         ServerSocket serverSocket = null;
+        HttpServerWriter writer = new HttpServerWriter();
         try {
             serverSocket = new ServerSocket(35000);
         } catch (IOException e) {
@@ -35,20 +35,15 @@ public class HttpServer {
                 System.err.println("Accept failed.");
                 System.exit(1);
             }
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
-            String inputLine, outputLine;
 
-            String path = "";
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            String inputLine,path="";
             boolean firstLine = true;
 
             while ((inputLine = in.readLine()) != null) {
                 if (firstLine){
-                    path = inputLine.split(" ")[1].substring(1);
+                    path = inputLine.split(" ")[1];
                     System.out.println("Path: " + path);
-                    URI resource = new URI(path);
-                    System.out.println("Path: " + resource.getPath());
                     firstLine = false;
                 }
                 System.out.println("Received: " + inputLine);
@@ -56,18 +51,8 @@ public class HttpServer {
                     break;
                 }
             }
-
-            outputLine = "HTTP/1.1 200 OK\r\n";
-            outputLine += "Content-Type: text/html\r\n";
-            outputLine +="\r\n";
-            outputLine += new String(Files.readAllBytes(Paths.get("resources/" + path)), StandardCharsets.UTF_8);
-
-            out.println(outputLine);
-
-            out.close();
-
+            writer.writer(path,clientSocket);
             in.close();
-
             clientSocket.close();
         }
         serverSocket.close();
