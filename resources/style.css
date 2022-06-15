@@ -1,0 +1,61 @@
+h1 {
+	position: absolute;
+	font-size: 2.197rem;
+	padding-left: 2rem;
+	top: 1rem;
+}
+
+h2 {
+	font-size: 1.69rem;
+}
+
+#sb-author {
+	position: absolute;
+	top: 11rem;
+	left: 5rem;
+}
+
+#bptable {
+	position: absolute;
+	top: 14.5rem;
+	left: 5rem;
+}
+
+#puntosText {
+	position: absolute;
+	top: 24rem;
+	padding-left: 5rem;
+}
+
+#canvasBp {
+	border: 1px solid black;
+	position: absolute;
+	top: 8rem;
+	left: 45rem;
+}
+.get-bp{
+       	position: absolute;
+       	top:  5.5rem;
+       	left: 25rem;
+}
+
+#author{
+	position: absolute;
+	padding-left: 5rem;
+	left: 8rem;
+	top: 5.5rem;
+}
+
+#aut{
+	position: absolute;	
+	left: 2.3rem;
+	top: 5rem;
+	display: block;
+	font-size: 1.8em;
+}
+
+#current {
+	position: absolute;
+	top: 4.5rem;
+	left: 45rem;
+}

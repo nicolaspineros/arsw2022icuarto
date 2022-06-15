@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Blueprints</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="/webjars/bootstrap/4.1.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body>
+    <h1>Blueprints</h1>
+    <div>
+        <div>
+            <label for="author" id="aut">Author</label>
+            <input type="text" id="author" name="author"><br>
+            <input type="button" class="get-bp" value="Get blueprints">
+            </br>
+            <h2 class="subtittle" id="sb-author">Blueprints</h2>
+            <table id="bptable" border="1px">
+                <thead>
+                <tr>
+                    <th>Blueprint name</th>
+                    <th>Number of points</th>
+                    <th>Open</th>
+                </tr>
+                </thead>
+                <tbody id="tb-body">                    
+                </tbody>
+            </table>
+            </br>            
+            <h2 class="subtittle" id="puntosText">Total user points</h2>
+            <div>
+                <h2 class="subtittle" id="current">Current Blueprint</h2>
+                <canvas class="canvas" id="canvasBp" width="500" height="500"></canvas>
+            </div>            
+        </div>
+    </div>
+</body>
+</html>
+
