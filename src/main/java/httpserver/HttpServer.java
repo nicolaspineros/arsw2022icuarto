@@ -2,9 +2,9 @@ package httpserver;
 
 import java.net.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import java.util.List;
 
 public class HttpServer {
     private static HttpServer _instance = new HttpServer();
@@ -17,10 +17,10 @@ public class HttpServer {
     }
 
     public static void start(String[] args) throws  Exception {
+        ExecutorService poolDeHilos = Executors.newFixedThreadPool(10);
         ServerSocket serverSocket = null;
-        HttpServerWriter writer = new HttpServerWriter();
         try {
-            serverSocket = new ServerSocket(35000);
+            serverSocket = new ServerSocket(getPort());
         } catch (IOException e) {
             System.err.println("Could not listen on port: 35000.");
             System.exit(1);
@@ -36,25 +36,20 @@ public class HttpServer {
                 System.exit(1);
             }
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String inputLine,path="";
-            boolean firstLine = true;
+            RequestProcesor requestProcesor = new RequestProcesor(clientSocket);
 
-            while ((inputLine = in.readLine()) != null) {
-                if (firstLine){
-                    path = inputLine.split(" ")[1];
-                    System.out.println("Path: " + path);
-                    firstLine = false;
-                }
-                System.out.println("Received: " + inputLine);
-                if (!in.ready()) {
-                    break;
-                }
-            }
-            writer.writer(path,clientSocket);
-            in.close();
-            clientSocket.close();
+            //new Thread(requestProcesor).start();
+
+            poolDeHilos.execute(requestProcesor);
+
         }
         serverSocket.close();
+    }
+
+    private static int getPort(){
+        if (System.getenv("PORT") != null){
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 36000;
     }
 }
