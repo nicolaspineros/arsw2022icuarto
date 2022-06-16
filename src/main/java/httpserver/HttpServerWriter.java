@@ -39,7 +39,9 @@ public class HttpServerWriter {
         } else if (typeImage.contains(fileType)) {
             writeImage();
         } else { System.err.println("Typo de archivo no encontrado");
-            throw new Exception("Typo de archivo no encontrado");
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(error);
+            //throw new Exception("Typo de archivo no encontrado");
         }
     }
 
@@ -77,4 +79,18 @@ public class HttpServerWriter {
             throw new RuntimeException(e);
         }
     }
+
+    static String error = "HTTP/1.0 404 Not Found"
+            + "Content-Type: text/html\r\n"
+            + "\r\n"
+            + "<!DOCTYPE html>"
+            + "<html>"
+            + "<head>"
+            + "<meta charset=\"UTF-8\">"
+            + "<title>ERROR</title>\n" + "</head>"
+            + "<body>"
+            + "<h1> Error 404 </h1>"
+            + "My Web Site"
+            + "</body>"
+            + "</html>";
 }
