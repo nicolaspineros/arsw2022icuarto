@@ -1,7 +1,6 @@
 package httpserver;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -25,7 +24,7 @@ public class HttpServerWriter {
         {
             add("png");
             add("jpg");
-            add("ico");
+            //add("ico");
         }
     };
     static Socket clientSocket;
@@ -48,7 +47,7 @@ public class HttpServerWriter {
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             outputLine = "HTTP/1.1 200 OK\r\n";
-            outputLine += "Content-Type: text/html\r\n";
+            outputLine += "Content-Type: text/"+ fileType + "\r\n";
             outputLine +="\r\n";
             outputLine += new String(Files.readAllBytes(Paths.get("resources" + file)), StandardCharsets.UTF_8);
             out.println(outputLine);
@@ -59,6 +58,23 @@ public class HttpServerWriter {
     }
 
     public static void writeImage(){
-
+        try {
+            File image = new File("resources" + file);
+            FileInputStream filein = new FileInputStream(image);
+            byte[] data = new byte[(int) image.length()];
+            filein.read(data);
+            filein.close();
+            DataOutputStream binaryOut = new DataOutputStream(clientSocket.getOutputStream());
+            binaryOut.writeBytes("HTTP/1.0 200 OK\r\n");
+            binaryOut.writeBytes("Content-Type: image/png\r\n");
+            binaryOut.writeBytes("Content-Length: " + data.length);
+            binaryOut.writeBytes("\r\n\r\n");
+            binaryOut.write(data);
+            binaryOut.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
