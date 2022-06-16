@@ -31,7 +31,7 @@ public class RequestProcesor implements Runnable{
 
         while ((inputLine = in.readLine()) != null) {
             if (firstLine){
-                path = inputLine.split(" ")[1];
+                path = inputLine.split(" ")[inputLine.length() - 1];
                 System.out.println("Path: " + path);
                 firstLine = false;
             }
