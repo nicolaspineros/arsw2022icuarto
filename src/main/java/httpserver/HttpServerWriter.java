@@ -14,16 +14,16 @@ public class HttpServerWriter {
 
     static List<String> typeText = new ArrayList<String>(){
         {
-            add("html");
-            add("js");
-            add("css");
+            add(".html");
+            add(".js");
+            add(".css");
         }
     };
 
     static List<String> typeImage = new ArrayList<String>(){
         {
-            add("png");
-            add("jpg");
+            add(".png");
+            add(".jpg");
             //add("ico");
         }
     };
@@ -31,18 +31,19 @@ public class HttpServerWriter {
 
     public static void writer(String path, Socket clientS) throws Exception {
         file = path;
-        fileType = path.split("\\.")[1];
-        System.out.println(fileType);
+        System.out.println(file);
         clientSocket = clientS;
-        if (typeText.contains(fileType)){
+        if (typeText.stream().anyMatch(p -> file.contains(p))) {
+            fileType = file.split("\\.")[1];
             writeText();
-        } else if (typeImage.contains(fileType)) {
+        } else if (typeImage.stream().anyMatch(p -> file.contains(p))) {
+            fileType = file.split("\\.")[1];
             writeImage();
-        } else { System.err.println("Typo de archivo no encontrado");
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(error);
-            //throw new Exception("Typo de archivo no encontrado");
+        } else {
+            System.err.println("Typo de archivo no encontrado");
+            error();
         }
+
     }
 
     public static void writeText(){
@@ -74,23 +75,32 @@ public class HttpServerWriter {
             binaryOut.write(data);
             binaryOut.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            error();
+        } catch (IOException e) {
+            error();
+        }
+    }
+
+    public static void error() {
+        try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            String error = "HTTP/1.0 404 Not Found"
+                    + "Content-Type: text/html\r\n"
+                    + "\r\n"
+                    + "<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "<meta charset=\"UTF-8\">"
+                    + "<title>ERROR</title>\n" + "</head>"
+                    + "<body>"
+                    + "<h1> Error 404 </h1>"
+                    + "My Web Site"
+                    + "</body>"
+                    + "</html>";
+            out.println(error);
+            out.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    static String error = "HTTP/1.0 404 Not Found"
-            + "Content-Type: text/html\r\n"
-            + "\r\n"
-            + "<!DOCTYPE html>"
-            + "<html>"
-            + "<head>"
-            + "<meta charset=\"UTF-8\">"
-            + "<title>ERROR</title>\n" + "</head>"
-            + "<body>"
-            + "<h1> Error 404 </h1>"
-            + "My Web Site"
-            + "</body>"
-            + "</html>";
 }
