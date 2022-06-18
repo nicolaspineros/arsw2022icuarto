@@ -5,14 +5,23 @@
 
 ## Fecha
 
-### 14 de Julio de 2022
+### 16 de Julio de 2022
+
+## Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://stark-headland-08945.herokuapp.com)
 
 # Pruebas
 - ## Prueba archivo texto 
 
-![](test/reqHtml.png)
-![](test/reqJs.png)
+![](test/testHtml.png)
+
 
 - ## Prueba archivo imagen
 
-![](test/reqImage.png)
+![](test/testImage.png)
+
+
+- ## Prueba Path incorrecto
+
+![](test/testIncorrectPath.png)
